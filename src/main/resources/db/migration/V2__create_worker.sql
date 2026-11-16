@@ -1,0 +1,40 @@
+create table worker (
+    id char(36) not null,
+    company_id char(36) not null,
+    full_name varchar(180) not null,
+    cpf varchar(14) not null,
+    rg varchar(20),
+    birth_date date,
+    gender varchar(20),
+    mother_name varchar(180),
+    email varchar(180),
+    phone varchar(20),
+    zip_code varchar(10),
+    street varchar(180),
+    number varchar(20),
+    complement varchar(120),
+    district varchar(120),
+    city varchar(120),
+    state varchar(2),
+    pis_pasep varchar(14),
+    ctps_number varchar(20),
+    ctps_series varchar(20),
+    admission_date date not null,
+    salary decimal(12,2) not null,
+    job_title varchar(120),
+    department varchar(120),
+    fgts_opt_in bit not null,
+    inss_number varchar(20),
+    dependents_ir_count integer not null,
+    withholds_irrf bit not null,
+    active bit not null,
+    created_at timestamp(6) not null,
+    updated_at timestamp(6) not null,
+    version bigint not null,
+    primary key (id),
+    constraint fk_worker_company foreign key (company_id) references company (id)
+);
+
+create index idx_worker_company_id on worker (company_id);
+create index idx_worker_full_name on worker (full_name);
+create index idx_worker_cpf on worker (cpf);

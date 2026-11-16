@@ -1,0 +1,1 @@
+Nunca faça commit com arquivos de modulos diferentes. Exemplo: worker e company.

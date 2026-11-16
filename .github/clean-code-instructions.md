@@ -1,0 +1,1 @@
+Nunca criar magic numbers, ou seja, constantes numéricas que não tenham nome claro ou sejam usadas sem constantes ou variáveis.
