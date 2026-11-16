@@ -170,6 +170,17 @@ class AuthAndCompanyIntegrationTest {
         assertThat(limitedPage.body()).contains("\"size\":100", "\"number\":0");
     }
 
+    @Test
+    void shouldUseDefaultPageSizeWhenRequestedSizeIsZero() throws Exception {
+        String token = loginToken();
+        createWorker(token, "Maria Oliveira", "12345678901");
+
+        HttpResponse<String> response = send("GET", "/api/v1/workers?size=0", null, bearerHeaders(token));
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body()).contains("\"size\":20", "\"number\":0", "\"totalElements\":1");
+    }
+
     private void createWorker(String token, String name, String cpf) throws Exception {
         HttpResponse<String> response = send("POST", "/api/v1/workers", workerJson(companyId, name, cpf), bearerHeaders(token));
         assertThat(response.statusCode()).isEqualTo(200);
