@@ -62,8 +62,12 @@ public class WorkerService {
     }
 
     @Transactional(readOnly = true)
-    public Page<WorkerResponse> list(Pageable pageable) {
-        return workerRepository.findAll(pageable).map(this::toResponse);
+    public Page<WorkerResponse> list(String name, Pageable pageable) {
+        if (name == null || name.isBlank()) {
+            return workerRepository.findAll(pageable).map(this::toResponse);
+        }
+        return workerRepository.findByFullNameContainingIgnoreCase(name.trim(), pageable)
+                .map(this::toResponse);
     }
 
     @Transactional(readOnly = true)

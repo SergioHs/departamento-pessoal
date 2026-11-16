@@ -3,7 +3,9 @@ package com.experiment.departamentopessoal.worker.api;
 import com.experiment.departamentopessoal.worker.application.WorkerService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -20,6 +23,8 @@ import java.util.UUID;
 @RequestMapping("/api/v1/workers")
 @PreAuthorize("hasRole('ADMIN')")
 public class WorkerController {
+
+    private static final int MAX_PAGE_SIZE = 100;
 
     private final WorkerService workerService;
 
@@ -33,8 +38,16 @@ public class WorkerController {
     }
 
     @GetMapping
-    public Page<WorkerResponse> list(Pageable pageable) {
-        return workerService.list(pageable);
+    public Page<WorkerResponse> list(
+            @RequestParam(required = false) String name,
+            @PageableDefault(size = 20) Pageable pageable
+    ) {
+        Pageable safePageable = PageRequest.of(
+                pageable.getPageNumber(),
+                Math.min(pageable.getPageSize(), MAX_PAGE_SIZE),
+                pageable.getSort()
+        );
+        return workerService.list(name, safePageable);
     }
 
     @GetMapping("/{id}")
